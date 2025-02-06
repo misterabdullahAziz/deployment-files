@@ -14,8 +14,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: blobserver
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/blobserver: runtime/default  # Correctly placed as an annotation
     spec:
       securityContext:
         fsGroup: 10500
