@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blobserver
+  namespace: my-namespace
+  labels:
+    app.kubernetes.io/name: blobserver
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: blobserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: blobserver
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/blobserver: runtime/default  # Correctly placed as an annotation
+    spec:
+      securityContext:
+        fsGroup: 10500
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
+      containers:
+        - name: blobserver
+          image: ghcr.io/pekrau/blobserver:1.4.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 200Mi
+              ephemeral-storage: 50Mi
+            requests:
+              cpu: 1000m
+              memory: 200Mi
+              ephemeral-storage: 10Mi
+          ports:
+            - containerPort: 5005
+              name: service
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 10500
+            readOnlyRootFilesystem: true
+            runAsGroup: 10500
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: GUNICORN_CMD_ARGS
+              value: "--workers=2 --thread=4 --worker-class=gthread --bind=0.0.0.0:5005 --forwarded-allow-ips='*' --access-logfile -"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: settings
+              mountPath: /code/site/settings.json
+              subPath: settings.json
+            - name: static
+              mountPath: /code/site/static
+            - name: tmp-folder
+              mountPath: /tmp
+      serviceAccountName: blobserver
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: blobserver-data
+        - name: settings
+          secret: 
+            secretName: blob-settings
+        - name: static
+          configMap: 
+            name: blob-static
+        - name: tmp-folder
+          emptyDir: {}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blobserver-data
+  namespace: my-namespace
+  labels:
+    storage: blobserver
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+    limits:
+      storage: 10Gi

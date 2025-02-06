@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blobserver
+  namespace: my-namespace
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+spec:
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blobserver
+            port:
+              number: 5005
