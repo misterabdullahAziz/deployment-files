@@ -16,4 +16,4 @@ spec:
           service:
             name: blobserver
             port:
-              number: 5005
+              number: 5009

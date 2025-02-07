@@ -9,8 +9,8 @@ spec:
   type: NodePort
   ports:
   - name: backend
-    port: 5005
-    targetPort: 5005
-    nodePort: 30005  # Ensure it's within the valid range
+    port: 5009
+    targetPort: 5009
+    nodePort: 30009  # Ensure it's within the valid range
   selector:
     app.kubernetes.io/name: blobserver
