@@ -14,3 +14,6 @@ spec:
     nodePort: 30005  # Ensure it's within the valid range
   selector:
     app.kubernetes.io/name: blobserver
+    asd
+    asd
+    
