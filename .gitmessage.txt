@@ -1,0 +1,5 @@
+# What does this commit do?
+# Examples:
+# - Add article for data ethics
+# - Fix spelling in landing page
+# (Optional format for devs): feat(ui): add search bar [WEB-203]
